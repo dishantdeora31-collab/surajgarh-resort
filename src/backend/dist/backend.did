@@ -1,0 +1,156 @@
+type _ImmutableObjectStorageRefillResult = 
+ record {
+   success: opt bool;
+   topped_up_amount: opt nat;
+ };
+type _ImmutableObjectStorageRefillInformation = record {
+                                                  proposed_top_up_amount:
+                                                   opt nat;};
+type _ImmutableObjectStorageCreateCertificateResult = 
+ record {
+   blob_hash: text;
+   method: text;
+ };
+type VenueId = text;
+type VenueBooking = 
+ record {
+   aadhaarNumber: text;
+   createdAt: Timestamp;
+   customerName: text;
+   date: text;
+   id: nat;
+   notes: text;
+   paidAmount: nat;
+   phoneNumber: text;
+   remainingAmount: nat;
+   status: BookingStatus;
+   totalAmount: nat;
+   venueId: VenueId;
+ };
+type Timestamp = int;
+type RoomBooking = 
+ record {
+   aadhaarNumber: text;
+   checkInDate: text;
+   checkOutDate: text;
+   createdAt: Timestamp;
+   customerName: text;
+   id: nat;
+   notes: text;
+   numberOfRooms: nat;
+   paidAmount: nat;
+   phoneNumber: text;
+   remainingAmount: nat;
+   status: BookingStatus;
+   totalAmount: nat;
+ };
+type RoomAvailability = 
+ record {
+   availableCount: nat;
+   bookedCount: nat;
+   date: text;
+ };
+type PublicRoomStatus = 
+ record {
+   availableCount: nat;
+   date: text;
+   isFullyBooked: bool;
+ };
+type PublicBookedDate = 
+ record {
+   date: text;
+   status: BookingStatus;
+ };
+type PhotoCategory = text;
+type Photo = 
+ record {
+   caption: text;
+   category: PhotoCategory;
+   id: nat;
+   mediaType: text;
+   order: nat;
+   thumbnailUrl: opt text;
+   uploadedAt: Timestamp;
+   url: text;
+ };
+type Inquiry = 
+ record {
+   email: text;
+   id: nat;
+   inquiryType: text;
+   message: text;
+   name: text;
+   phone: text;
+   submittedAt: Timestamp;
+ };
+type ContentRecord = 
+ record {
+   key: text;
+   updatedAt: Timestamp;
+   value: text;
+ };
+type BookingStatus = text;
+type Announcement = 
+ record {
+   body: text;
+   createdAt: Timestamp;
+   id: nat;
+   isActive: bool;
+   publishDate: text;
+   title: text;
+ };
+service : {
+  _immutableObjectStorageBlobsAreLive: (hashes: vec blob) -> (vec bool) query;
+  _immutableObjectStorageBlobsToDelete: () -> (vec blob) query;
+  _immutableObjectStorageConfirmBlobDeletion: (blobs: vec blob) -> ();
+  _immutableObjectStorageCreateCertificate: (blobHash: text) ->
+   (_ImmutableObjectStorageCreateCertificateResult);
+  _immutableObjectStorageRefillCashier: (refillInformation:
+   opt _ImmutableObjectStorageRefillInformation) ->
+   (_ImmutableObjectStorageRefillResult);
+  _immutableObjectStorageUpdateGatewayPrincipals: () -> ();
+  addAnnouncement: (title: text, body: text, publishDate: text, isActive:
+   bool) -> (nat);
+  addPhoto: (category: PhotoCategory, url: text, caption: text, mediaType:
+   text, thumbnailUrl: opt text) -> (nat);
+  addRoomBooking: (checkInDate: text, checkOutDate: text, numberOfRooms: 
+   nat, customerName: text, phoneNumber: text, aadhaarNumber: text,
+   totalAmount: nat, paidAmount: nat, remainingAmount: nat, notes: text,
+   bookingStatus: BookingStatus) -> (nat);
+  addVenueBooking: (venueId: VenueId, date: text, customerName: text,
+   phoneNumber: text, aadhaarNumber: text, totalAmount: nat, paidAmount: 
+   nat, remainingAmount: nat, notes: text, bookingStatus: BookingStatus) ->
+   (nat);
+  deleteAnnouncement: (id: nat) -> (bool);
+  deleteInquiry: (id: nat) -> (bool);
+  deletePhoto: (id: nat) -> (bool);
+  deleteRoomBooking: (id: nat) -> (bool);
+  deleteVenueBooking: (id: nat) -> (bool);
+  getActiveAnnouncements: () -> (vec Announcement) query;
+  getAllAnnouncements: () -> (vec Announcement) query;
+  getAllContentKeys: () -> (vec text) query;
+  getAllInquiries: () -> (vec Inquiry) query;
+  getAllRoomBookings: () -> (vec RoomBooking) query;
+  getAllSiteContent: () -> (vec ContentRecord) query;
+  getPhotosByCategory: (category: PhotoCategory) -> (vec Photo) query;
+  getPublicRoomStatus: (date: text) -> (PublicRoomStatus) query;
+  getRoomAvailability: (date: text) -> (RoomAvailability) query;
+  getSiteContent: (key: text) -> (opt ContentRecord) query;
+  getVenueBookedDates: (venueId: VenueId) -> (vec PublicBookedDate) query;
+  getVenueBookings: (venueId: VenueId) -> (vec VenueBooking) query;
+  reorderGalleryMedia: (orderedIds: vec nat) -> (bool);
+  reorderPhoto: (id: nat, newOrder: nat) -> (bool);
+  submitInquiry: (name: text, phone: text, email: text, inquiryType: 
+   text, message: text) -> (nat);
+  updateAnnouncement: (id: nat, title: text, body: text, publishDate: 
+   text, isActive: bool) -> (bool);
+  updateRoomBooking: (id: nat, checkInDate: text, checkOutDate: text,
+   numberOfRooms: nat, customerName: text, phoneNumber: text, aadhaarNumber:
+   text, totalAmount: nat, paidAmount: nat, remainingAmount: nat, notes:
+   text, bookingStatus: BookingStatus) -> (bool);
+  updateSiteContent: (key: text, value: text) -> ();
+  updateVenueBooking: (id: nat, customerName: text, phoneNumber: text,
+   aadhaarNumber: text, totalAmount: nat, paidAmount: nat, remainingAmount:
+   nat, notes: text, bookingStatus: BookingStatus) -> (bool);
+  verifyAdminPassword: (password: text) -> (bool) query;
+}

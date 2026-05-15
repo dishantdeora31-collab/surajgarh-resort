@@ -1,0 +1,120 @@
+// Version: 1.0.0
+type Announcement__160704614 =
+  {
+    body : Text;
+    createdAt : Timestamp__301639476;
+    id : Nat;
+    isActive : Bool;
+    publishDate : Text;
+    title : Text
+  };
+type BookingStatus__96719981 = Text;
+type ContentRecord__449294438 =
+  {key : Text; updatedAt : Timestamp__301639476; value : Text};
+type Data__791452850<K, V> =
+  {var count : Nat__490723111; kvs : [var ?(K, V)]};
+type Inquiry__159127206 =
+  {
+    email : Text;
+    id : Nat;
+    inquiryType : Text;
+    message : Text;
+    name : Text;
+    phone : Text;
+    submittedAt : Timestamp__301639476
+  };
+type Internal__8484328<K, V> =
+  {children : [var ?Node__46230540<K, V>]; data : Data__791452850<K, V>};
+type Leaf__809889148<K, V> = {data : Data__791452850<K, V>};
+type Nat__490723111 = Nat__920180692;
+type Nat__920180692 = Nat;
+type Node__46230540<K, V> =
+  {#internal : Internal__8484328<K, V>; #leaf : Leaf__809889148<K, V>};
+type PhotoCategory__976375812 = Text;
+type Photo__977867310 =
+  {
+    caption : Text;
+    category : PhotoCategory__976375812;
+    id : Nat;
+    mediaType : Text;
+    order : Nat;
+    thumbnailUrl : ?Text;
+    uploadedAt : Timestamp__301639476;
+    url : Text
+  };
+type RoomBooking__374358374 =
+  {
+    aadhaarNumber : Text;
+    checkInDate : Text;
+    checkOutDate : Text;
+    createdAt : Timestamp__301639476;
+    customerName : Text;
+    id : Nat;
+    notes : Text;
+    numberOfRooms : Nat;
+    paidAmount : Nat;
+    phoneNumber : Text;
+    remainingAmount : Nat;
+    status : BookingStatus__96719981;
+    totalAmount : Nat
+  };
+type Timestamp__301639476 = Int;
+type VenueBooking__798756783 =
+  {
+    aadhaarNumber : Text;
+    createdAt : Timestamp__301639476;
+    customerName : Text;
+    date : Text;
+    id : Nat;
+    notes : Text;
+    paidAmount : Nat;
+    phoneNumber : Text;
+    remainingAmount : Nat;
+    status : BookingStatus__96719981;
+    totalAmount : Nat;
+    venueId : VenueId__278562282
+  };
+type VenueId__278562282 = Text;
+actor {
+  stable adminAuth : {var passwordHash : Text};
+  stable announcementState : {var nextAnnouncementId : Nat};
+  stable announcements :
+    {
+      var blockIndex : Nat__490723111;
+      var blocks : [var [var ?Announcement__160704614]];
+      var elementIndex : Nat__490723111
+    };
+  stable inquiries :
+    {
+      var blockIndex : Nat__490723111;
+      var blocks : [var [var ?Inquiry__159127206]];
+      var elementIndex : Nat__490723111
+    };
+  stable inquiryState : {var nextInquiryId : Nat};
+  stable photoState : {var nextPhotoId : Nat};
+  stable photos :
+    {
+      var blockIndex : Nat__490723111;
+      var blocks : [var [var ?Photo__977867310]];
+      var elementIndex : Nat__490723111
+    };
+  stable roomBookings :
+    {
+      var blockIndex : Nat__490723111;
+      var blocks : [var [var ?RoomBooking__374358374]];
+      var elementIndex : Nat__490723111
+    };
+  stable roomState : {var nextRoomBookingId : Nat};
+  stable siteContent :
+    {
+      var root : Node__46230540<Text, ContentRecord__449294438>;
+      var size : Nat__490723111
+    };
+  stable venueBookings :
+    {
+      var blockIndex : Nat__490723111;
+      var blocks : [var [var ?VenueBooking__798756783]];
+      var elementIndex : Nat__490723111
+    };
+  stable venueState : {var nextBookingId : Nat}
+};
